@@ -8,7 +8,6 @@
 
 // Execute `rustlings hint errors6` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
 
 use std::num::ParseIntError;
 
@@ -25,6 +24,9 @@ impl ParsePosNonzeroError {
     }
     // TODO: add another error conversion function here.
     // fn from_parseint...
+    fn from_parseint(err: ParseIntError) -> ParsePosNonzeroError{
+        ParsePosNonzeroError::ParseInt(err)
+    }
 }
 
 fn parse_pos_nonzero(s: &str)
@@ -32,10 +34,17 @@ fn parse_pos_nonzero(s: &str)
 {
     // TODO: change this to return an appropriate error instead of panicking
     // when `parse()` returns an error.
-    let x: i64 = s.parse().unwrap();
+
+    // standard answer
+    // 这行代码的作用是将一个字符串类型的值s解析为i64类型的值，然后赋给变量x。
+    // s.parse()表示将s解析为i64类型的值，解析成功则返回Ok(i64)，否则返回Err(ParseIntError)。
+    // 但是在这道练习中，我们定义了一个自定义的错误类型ParsePosNonzeroError，而不是使用标准库提供的ParseIntError。因此我们需要将ParseIntError类型的错误转换为ParsePosNonzeroError类型的错误。这里我们使用了map_err方法，将ParseIntError类型的错误映射为ParsePosNonzeroError类型的错误。
+    // 因此，整行代码的意思是：将s解析为i64类型的值，如果解析失败则将ParseIntError类型的错误转换为ParsePosNonzeroError类型的错误，并返回这个错误。如果解析成功，则将i64类型的值赋给x。
+
+    let x: i64 = s.parse().map_err(ParsePosNonzeroError::from_parseint)?;
     PositiveNonzeroInteger::new(x)
         .map_err(ParsePosNonzeroError::from_creation)
-}
+}   
 
 // Don't change anything below this line.
 

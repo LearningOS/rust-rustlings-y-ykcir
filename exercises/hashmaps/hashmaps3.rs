@@ -14,9 +14,9 @@
 
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
 
 use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 
 // A structure to store team name and its goal details.
 struct Team {
@@ -35,11 +35,73 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_1_score: u8 = v[2].parse().unwrap();
         let team_2_name = v[1].to_string();
         let team_2_score: u8 = v[3].parse().unwrap();
-        // TODO: Populate the scores table with details extracted from the
+        // Populate the scores table with details extracted from the
         // current line. Keep in mind that goals scored by team_1
         // will be number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+        // match scores.get_mut(&team_1_name) {
+        //     Some(team) => {
+        //         team.goals_scored += team_1_score;
+        //         team.goals_conceded += team_2_score;
+        //     }
+        //     None => {
+        //         scores.insert(
+        //             team_1_name.clone(),
+        //             Team {
+        //                 name: team_1_name,
+        //                 goals_scored: team_1_score,
+        //                 goals_conceded: team_2_score,
+        //             },
+        //         );
+        //     }
+        // }
+
+        // match scores.get_mut(&team_2_name) {
+        //     Some(team) => {
+        //         team.goals_scored += team_2_score;
+        //         team.goals_conceded += team_1_score;
+        //     }
+        //     None => {
+        //         scores.insert(
+        //             team_2_name.clone(), 
+        //             Team { 
+        //                 name: team_2_name, 
+        //                 goals_scored: team_2_score, 
+        //                 goals_conceded: team_1_score,
+        //             },
+        //         );
+        //     }
+        // }
+
+        // match scores.entry(team_1_name.clone()) {
+        //     Entry::Occupied(mut e) => {
+        //         let mut team: &mut Team = e.get_mut();
+        //         team.goals_scored += team_1_score;
+        //         team.goals_conceded += team_2_score;
+        //     },
+        //     Entry::Vacant(e) => {
+        //         e.insert(Team { name: team_1_name, goals_scored: team_1_score, goals_conceded: team_2_score });
+        //     }
+        // }
+
+        // match scores.entry(team_2_name.clone()) {
+        //     Entry::Occupied(mut e) => {
+        //         let mut team: &mut Team = e.get_mut();
+        //         team.goals_scored += team_2_score;
+        //         team.goals_conceded += team_1_score;
+        //     },
+        //     Entry::Vacant(e) => {
+        //         e.insert(Team { name: team_2_name, goals_scored: team_2_score, goals_conceded: team_1_score });
+        //     }
+        // }
+
+        let team_1 = scores.entry(team_1_name.clone()).or_insert(Team{name:team_1_name.clone(),goals_scored:0,goals_conceded:0});
+        team_1.goals_scored +=team_1_score;
+        team_1.goals_conceded += team_2_score;
+        let team_2 = scores.entry(team_2_name.clone()).or_insert(Team{name:team_2_name.clone(),goals_scored:0,goals_conceded:0});
+        team_2.goals_scored +=team_2_score;
+        team_2.goals_conceded += team_1_score;
     }
     scores
 }
